@@ -1,10 +1,58 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Tavisca.Bootcamp.LanguageBasics.Exercise1
 {
     public static class Program
     {
+        public class Dish
+        {
+            public int P, C, F, T, index;
+            public Dish(int i, int p, int c, int f)
+            {
+                index = i;
+                P = p;
+                C = c;
+                F = f;
+                T = 5 * p + 5 * c + 9 * f;
+            }
+        }
+
+        class sortByVal : IComparer<Dish>
+        {
+            char x;
+            public sortByVal(char c)
+            {
+                x = c;
+            }
+            public int Compare(Dish d1, Dish d2)
+            {
+                //Dish d1 = (Dish)a;
+                //Dish d2 = (Dish)b;
+                switch (x)
+                {
+                    case 'p':
+                        return (d1.P > d2.P) ? 1 : ((d1.P < d2.P) ? -1 : 0);
+                    case 'c':
+                        return (d1.C > d2.C) ? 1 : ((d1.C < d2.C) ? -1 : 0);
+                    case 't':
+                        return (d1.T > d2.T) ? 1 : ((d1.T < d2.T) ? -1 : 0);
+                    case 'f':
+                        return (d1.F > d2.F) ? 1 : ((d1.F < d2.F) ? -1 : 0);
+                    case 'P':
+                        return (d1.P > d2.P) ? -1 : ((d1.P < d2.P) ? 1 : 0);
+                    case 'C':
+                        return (d1.C > d2.C) ? -1 : ((d1.C < d2.C) ? 1 : 0);
+                    case 'T':
+                        return (d1.T > d2.T) ? -1 : ((d1.T < d2.T) ? 1 : 0);
+                    case 'F':
+                        return (d1.F > d2.F) ? -1 : ((d1.F < d2.F) ? 1 : 0);
+                }
+                return 0;
+            }
+        }
+
         static void Main(string[] args)
         {
             Test(
@@ -41,6 +89,66 @@ namespace Tavisca.Bootcamp.LanguageBasics.Exercise1
         public static int[] SelectMeals(int[] protein, int[] carbs, int[] fat, string[] dietPlans)
         {
             // Add your code here.
+            int n = protein.Length;
+            Dish[] dis = new Dish[n];
+            for (int i = 0; i < n; i++)
+            {
+                dis[i] = new Dish(i, protein[i], carbs[i], fat[i]);
+                //di.Add(d);
+            }
+
+            int[] ans = new int[dietPlans.Length];
+            int j = 0;
+            string s;
+            foreach (string st in dietPlans)
+            {
+                s = st;
+                List<Dish> al = new List<Dish>(dis);
+                for (int i = 0; i < s.Length; i++)
+                {
+                    List<Dish> li = new List<Dish>();
+                    char c = s[i];
+                    al.Sort(new sortByVal(c));
+                    Dish dish = al[0];
+                    foreach (Dish k in al)
+                    {
+                        switch (c)
+                        {
+                            case 'p':
+                                if (k.P == dish.P) li.Add(k);
+                                break;
+                            case 'P':
+                                if (k.P == dish.P) li.Add(k);
+                                break;
+                            case 'c':
+                                if (k.C == dish.C) li.Add(k);
+                                break;
+                            case 'C':
+                                if (k.C == dish.C) li.Add(k);
+                                break;
+                            case 'f':
+                                if (k.F == dish.F) li.Add(k);
+                                break;
+                            case 'F':
+                                if (k.F == dish.F) li.Add(k);
+                                break;
+                            case 't':
+                                if (k.T == dish.T) li.Add(k);
+                                break;
+                            case 'T':
+                                if (k.T == dish.T) li.Add(k);
+                                break;
+                        }
+                    }
+                    al.Clear();
+                    foreach (Dish k in li)
+                        al.Add(k);
+                }
+                ans[j] = al[0].index;
+                j++;
+            }
+
+            return ans;
             throw new NotImplementedException();
         }
     }
